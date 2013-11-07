@@ -65,8 +65,18 @@ def cme_create_account(request, post_override=None):
             json_string['field'] = var
             return HttpResponse(json.dumps(json_string))
 
-    #Validate required fields
-    error = validate_required_fields(post_vars)
+    #Validate required fields set1
+    error = validate_required_fields_set1(post_vars)
+    if error is not None:
+        return HttpResponse(json.dumps(error))
+    
+    #Validate fields dependent on Professional Designation
+    error = validate_professional_fields(post_vars)
+    if error is not None:
+        return HttpResponse(json.dumps(error))
+    
+    #Validate required fields set2
+    error = validate_required_fields_set2(post_vars)
     if error is not None:
         return HttpResponse(json.dumps(error))
 
@@ -238,14 +248,13 @@ def _do_cme_create_account(post_vars):
     return (user, cme_user_profile, registration)
 
 
-def validate_required_fields(post_vars):
+def validate_required_fields_set1(post_vars):
     """
     Checks that required free text fields contain at least 2 chars
     `post_vars` is dict of post parameters (a `dict`)
     Returns a dict indicating failure, field and message on empty field else None
     """
 
-    print post_vars
     #Add additional required fields here
     required_fields_list = [{'email': 'A properly formatted e-mail is required.'},
                             {'password': 'A valid password is required.'},
@@ -258,7 +267,51 @@ def validate_required_fields(post_vars):
                             {'professional_designation': 'Choose your professional designation'},
               #              {'patient_population': 'Choose your patient population'},
               #              {'specialty': 'Choose your specialty'},
-                            {'address_1': 'Enter your Address 1'},
+                           ]
+
+    error = {}
+    for required_field in required_fields_list:
+        for key, val in required_field.iteritems():   
+            if len(post_vars.get(key)) < 2:
+                error['success'] = False
+                error['value'] = val
+                error['field'] = key
+                return error
+
+
+def validate_professional_fields(post_vars):
+    """
+    Checks that professional fields are filled out correctly
+    `post_vars` is dict of post parameters (a `dict`)
+    Returns a dict indicating failure, field and message on empty field else None
+    """
+
+    required_fields_list = [{'license_number': 'Enter your license number'},
+                            {'license_state': 'Enter your license state'},
+                            {'physician_status': 'Enter your physician status'},
+                            {'patient_population': 'Choose your patient population'},
+                           ]
+    
+    error = {}
+    if post_vars.get('professional_designation') in ['DO', 'MD, PhD', 'MBBS']:
+        for required_field in required_fields_list:
+            for key, val in required_field.iteritems():   
+                if len(post_vars.get(key)) < 2:
+                    error['success'] = False
+                    error['value'] = val
+                    error['field'] = key
+                    return error
+
+
+def validate_required_fields_set2(post_vars):
+    """
+    Checks that required free text fields contain at least 2 chars
+    `post_vars` is dict of post parameters (a `dict`)
+    Returns a dict indicating failure, field and message on empty field else None
+    """
+
+    #Add additional required fields here
+    required_fields_list = [{'address_1': 'Enter your Address 1'},
                             {'city': 'Enter your city'},
                             {'state_province': 'Choose your state/Province'},
                             {'postal_code': 'Enter your postal code'},
@@ -269,7 +322,6 @@ def validate_required_fields(post_vars):
 
     error = {}
     for required_field in required_fields_list:
-        print required_field
         for key, val in required_field.iteritems():   
             if len(post_vars.get(key)) < 2:
                 error['success'] = False
