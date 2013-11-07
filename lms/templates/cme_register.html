@@ -90,7 +90,7 @@
         }
       });
       $('select#country').change(function() {
-        var dependentRequiredFields = 'li#state_province_container, li#postal_code_container';
+        var dependentRequiredFields = 'li#state_province_container';
         
         if ($(this).children("option:selected").val() === 'United States' || $(this).children("option:selected").val() === 'Canada') {
           $(this).parent().siblings(dependentRequiredFields).addClass('required');
@@ -533,7 +533,7 @@
            <input id="county_province" type="text" name="county_province" />
          </li>
 
-         <li class="field" id="postal_code_container">
+         <li class="field required" id="postal_code_container">
            <label for="postal_code">Postal/Zip Code</label>
            <input id="postal_code" type="text" name="postal_code" />
          </li>
