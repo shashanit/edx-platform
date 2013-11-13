@@ -33,6 +33,7 @@ function () {
     function _makeFunctionsPublic(state) {
         var methodsDict = {
             buildSlider: buildSlider,
+            getRegionParams: getRegionParams,
             onSlide: onSlide,
             onStop: onStop,
             updatePlayTime: updatePlayTime,
@@ -96,7 +97,7 @@ function () {
     }
 
     function updateStartEndTimeRegion(params) {
-        var left, width, start, end, step, duration;
+        var left, width, start, end, duration, regionParams;
 
         // We must have a duration in order to determine the area of range.
         // It also must be non-zero.
@@ -124,9 +125,8 @@ function () {
         //
         // This will ensure that visually, the start-end range aligns nicely
         // with actual starting and ending point of the video.
-        step = 100.0 / duration;
-        left = start * step;
-        width = end * step - left;
+
+        regionParams = getRegionParams(start, end, duration);
 
         if (!this.videoProgressSlider.sliderRange) {
             this.videoProgressSlider.sliderRange = $('<div />', {
@@ -135,8 +135,8 @@ function () {
                        'ui-corner-all ' +
                        'slider-range'
             }).css({
-                left: left + '%',
-                width: width + '%'
+                left: regionParams.left,
+                width: regionParams.width
             });
 
             this.videoProgressSlider.sliderProgress
@@ -144,10 +144,21 @@ function () {
         } else {
             this.videoProgressSlider.sliderRange
                 .css({
-                    left: left + '%',
-                    width: width + '%'
+                    left: regionParams.left,
+                    width: regionParams.width
                 });
         }
+    }
+
+    function getRegionParams (startTime, endTime, duration) {
+        var step = 100 / duration,
+            left = startTime * step,
+            width = endTime * step - left;
+
+        return {
+            left: left + '%',
+            width: width + '%'
+        };
     }
 
     function onSlide(event, ui) {
