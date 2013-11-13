@@ -207,19 +207,29 @@
             <input id="last_name" type="text" name="last_name" value="" required aria-required="true" />
           </li>
           
+          <li class="field required text" id="field-name">
+            <label for="name">First Name</label>
+            <input id="first_name" type="text" name="first_name" value="" required aria-required="true" />
+          </li>
+          
           <li class="field select" id="field-name">
             <label for="name">Middle Initial</label>
             <input id="middle_initial" type="text" name="middle_initial" value="" required aria-required="true" />
           </li>
           
           <li class="field required text" id="field-name">
-            <label for="name">First Name</label>
-            <input id="first_name" type="text" name="first_name" value="" required aria-required="true" />
+            <label for="name">Birth Date</label>
+            <input id="birth_date" type="text" name="birth_date" value="" required aria-required="true" placeholder="MM/DD" maxlength="5" />
           </li>
           
-          <li class="field required text" id="field-name">
-            <label for="name">Birth Date</label>
-            <input id="birth_date" type="text" name="birth_date" value="" required aria-required="true" placeholder="MM/YY" maxlength="5" />
+          <li class="field select" id="gender_container">
+           <label for="gender">Gender</label>
+           <select id="gender" name="gender">
+             <option value="">--</option>
+             %for code, gender in CmeUserProfile.GENDER_CHOICES:
+               <option value="${code}">${gender}</option>
+             %endfor
+           </select>
           </li>
           
         </ol>
@@ -270,7 +280,7 @@
        <ol class="list-input">
          
           <li class="field required text" id="field-professional-designation_container">
-            <label for="professional_designation">Designation</label>
+            <label for="professional_designation">Professional Designation</label>
             <select id="professional_designation" name="professional_designation">
               <option value="">--</option>
               %for code, professional_designation in CmeUserProfile.PROFESSIONAL_DESIGNATION_CHOICES:
@@ -295,7 +305,7 @@
           </li>
 
           <li class="field select" id="physician_status_container">
-            <label for="physician_status">Physician Status</label>
+            <label for="physician_status">Professional Status</label>
            <select id="physician_status" name="physician_status">
              <option value="">--</option>
              %for code, status in CmeUserProfile.PHYSICIAN_STATUS_CHOICES:
@@ -488,11 +498,6 @@
 
         <ol class="list-input">
         
-         <li class="field select" id="job_title_or_position_container">
-           <label for="job_title_or_position">Job Title or Position</label>
-           <input id="job_title_or_position" type="text" name="job_title_or_position" />
-         </li>
-        
          <li class="field required" id="address_1_container">
            <label for="address_1">Address 1</label>
            <input id="address_1" type="text" name="address_1" />
@@ -529,7 +534,7 @@
          </li>
          
          <li class="field" id="county_province_container">
-           <label for="county_province">County/Province</label>
+           <label for="county_province">International Province or Territory</label>
            <input id="county_province" type="text" name="county_province" />
          </li>
 
@@ -543,18 +548,6 @@
            <input id="phone_number" type="text" name="phone_number" />
          </li>
        
-         <li class="field select" id="gender_container">
-           <label for="gender">Gender</label>
-           <select id="gender" name="gender">
-             <option value="">--</option>
-             %for code, gender in CmeUserProfile.GENDER_CHOICES:
-               <option value="${code}">${gender}</option>
-             %endfor
-           </select>
-         </li>
-       
-       
-
         </ol>
       </fieldset>
 
