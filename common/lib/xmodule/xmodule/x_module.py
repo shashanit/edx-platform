@@ -407,12 +407,7 @@ class XModule(XModuleMixin, HTMLSnippet, XBlock):  # pylint: disable=abstract-me
         """
         response_data = self.handle_ajax(suffix, request.POST)
 
-        if isinstance(response_data, tuple):
-            response_data, content_type = response_data
-        else:
-            content_type = 'application/json'
-
-        return Response(response_data, content_type=content_type)
+        return Response(response_data, content_type='application/json')
 
     def get_children(self):
         """
@@ -1045,11 +1040,14 @@ class ModuleSystem(ConfigurableFragmentWrapper, Runtime):  # pylint: disable=abs
         return str(self.__dict__)
 
     @property
-    def ajax_url(self):
+    def ajax_url(self, third_party=False):
         """
         The url prefix to be used by XModules to call into handle_ajax
         """
-        return self.handler_url(self.xmodule_instance, 'xmodule_handler', '', '').rstrip('/?')
+        handler_name = 'xmodule_handler'
+        if third_party:
+            handler_name = 'custom_handler'
+        return self.handler_url(self.xmodule_instance, handler_name, '', '').rstrip('/?')
 
 
 class DoNothingCache(object):
