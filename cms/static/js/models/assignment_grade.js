@@ -1,7 +1,7 @@
-define(["backbone", "underscore", "js/models/location"], function(Backbone, _, Location) {
+define(["backbone", "underscore"], function(Backbone, _) {
     var AssignmentGrade = Backbone.Model.extend({
         defaults : {
-            graderType : null, // the type label (string). May be "Not Graded" which implies None. I'd like to use id but that's ephemeral
+            graderType : null, // the type label (string). May be "Not Graded" which implies None. 
             location : null // A location object
         },
         initialize : function(attrs) {
@@ -9,12 +9,8 @@ define(["backbone", "underscore", "js/models/location"], function(Backbone, _, L
                 this.set('location', new Location(attrs['assignmentUrl'], {parse: true}));
             }
         },
-        parse : function(attrs) {
-            if (attrs && attrs['location']) {
-                attrs.location = new Location(attrs['location'], {parse: true});
-            }
-        },
         urlRoot : function() {
+            // return locator.url_reverse('xblock', 'gradeas') + '/' + graderType
             if (this.has('location')) {
                 var location = this.get('location');
                 return '/' + location.get('org') + "/" + location.get('course') + '/' + location.get('category') + '/'

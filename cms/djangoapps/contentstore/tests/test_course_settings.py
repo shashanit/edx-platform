@@ -259,22 +259,6 @@ class CourseGradingTest(CourseTestCase):
         subgrader = CourseGradingModel.fetch_grader(self.course.location.list(), 0)
         self.assertDictEqual(test_grader.graders[0], subgrader, "failed with location as list")
 
-    def test_fetch_cutoffs(self):
-        test_grader = CourseGradingModel.fetch_cutoffs(self.course.location)
-        # ??? should this check that it's at least a dict? (expected is { "pass" : 0.5 } I think)
-        self.assertIsNotNone(test_grader, "No cutoffs via fetch")
-
-        test_grader = CourseGradingModel.fetch_cutoffs(self.course.location.url())
-        self.assertIsNotNone(test_grader, "No cutoffs via fetch with url")
-
-    def test_fetch_grace(self):
-        test_grader = CourseGradingModel.fetch_grace_period(self.course.location)
-        # almost a worthless test
-        self.assertIn('grace_period', test_grader, "No grace via fetch")
-
-        test_grader = CourseGradingModel.fetch_grace_period(self.course.location.url())
-        self.assertIn('grace_period', test_grader, "No cutoffs via fetch with url")
-
     def test_update_from_json(self):
         test_grader = CourseGradingModel.fetch(self.course.location)
         altered_grader = CourseGradingModel.update_from_json(test_grader.__dict__)
