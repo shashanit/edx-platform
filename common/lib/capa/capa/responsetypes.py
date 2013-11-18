@@ -965,15 +965,18 @@ class StringResponse(LoncapaResponse):
         return CorrectMap(self.answer_id, 'correct' if correct else 'incorrect')
 
     def check_string(self, expected, given):
+        expected = [i.strip() for i in expected.split('|')];
+
         if self.xml.get('type') == 'ci':
-            return given.lower() == expected.lower()
-        return given == expected
+            return given.lower() in [i.lower() for i in expected]
+        return given in expected
 
     def check_hint_condition(self, hxml_set, student_answers):
         given = student_answers[self.answer_id].strip()
         hints_to_show = []
         for hxml in hxml_set:
             name = hxml.get('name')
+
             correct_answer = contextualize_text(
                 hxml.get('answer'), self.context).strip()
             if self.check_string(correct_answer, given):
