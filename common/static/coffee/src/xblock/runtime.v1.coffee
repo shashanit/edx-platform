@@ -4,9 +4,11 @@
     childMap[child.name] = child
 
   return {
-    handlerUrl: (handlerName) ->
+    handlerUrl: (element, handlerName, suffix, query) ->
       handlerPrefix = $(element).data("handler-prefix")
-      "#{handlerPrefix}/#{handlerName}"
+      suffix = if suffix? then "/#{suffix}" else ''
+      query = if query? then "?#{query}" else ''
+      "#{handlerPrefix}/#{handlerName}#{suffix}#{query}"
     children: children
     childMap: childMap
   }

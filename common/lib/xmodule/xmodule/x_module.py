@@ -903,6 +903,13 @@ class DescriptorSystem(ConfigurableFragmentWrapper, Runtime):  # pylint: disable
         else:
             return super(DescriptorSystem, self).render(block, view_name, context)
 
+    def handler_url(self, block, handler_name, suffix='', query=''):
+        xmodule_runtime = getattr(block, 'xmodule_runtime', None)
+        if xmodule_runtime is not None:
+            return xmodule_runtime.handler_url(block, handler_name, suffix, query)
+        else:
+            return super(DescriptorSystem, self).handler_url(block, handler_name, suffix, query)
+
 
 class XMLParsingSystem(DescriptorSystem):
     def __init__(self, process_xml, policy, **kwargs):

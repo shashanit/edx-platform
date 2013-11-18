@@ -62,12 +62,22 @@ def handler_url(course_id, block, handler, suffix='', query=''):
     """
     Return an xblock handler url for the specified course, block and handler
     """
-    return reverse('xblock_handler', kwargs={
+    url = reverse('xblock_handler', kwargs={
         'course_id': course_id,
         'usage_id': quote_slashes(str(block.scope_ids.usage_id)),
         'handler': handler,
         'suffix': suffix,
-    }) + '?' + query
+    })
+
+    # If suffix is an empty string, remove the trailing '/'
+    if not suffix:
+        url = url.rstrip('/')
+
+    # If there is a query string, append it
+    if query:
+        url += '?' + query
+
+    return url
 
 
 def handler_prefix(course_id, block):
@@ -75,7 +85,7 @@ def handler_prefix(course_id, block):
     Returns a prefix for use by the javascript handler_url function.
     The prefix is a valid handler url the handler name is appended to it.
     """
-    return handler_url(course_id, block, '').rstrip('/')
+    return handler_url(course_id, block, '').rstrip('/?')
 
 
 class LmsHandlerUrls(object):
