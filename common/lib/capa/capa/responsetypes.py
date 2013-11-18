@@ -985,7 +985,7 @@ class StringResponse(LoncapaResponse):
         return hints_to_show
 
     def get_answers(self):
-        return {self.answer_id: self.correct_answer}
+        return {self.answer_id: self.correct_answer.replace('|', ' <b>or</b> ')}
 
 #-----------------------------------------------------------------------------
 
