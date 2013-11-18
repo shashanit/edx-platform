@@ -248,6 +248,47 @@
                 });
             });
         });
+
+        describe('notifyThroughHandleEnd', function () {
+            beforeEach(function () {
+                initialize();
+
+                spyOnEvent(videoProgressSlider.handle, 'focus');
+                spyOn(videoProgressSlider, 'notifyThroughHandleEnd')
+                    .andCallThrough();
+            });
+
+            it('params.end = true', function () {
+                videoProgressSlider.notifyThroughHandleEnd({end: true});
+
+                expect(videoProgressSlider.handle.attr('title'))
+                    .toBe('video ended');
+
+                expect('focus').toHaveBeenTriggeredOn(videoProgressSlider.handle);
+            });
+
+            it('params.end = false', function () {
+                videoProgressSlider.notifyThroughHandleEnd({end: false});
+
+                expect(videoProgressSlider.handle.attr('title'))
+                    .toBe('video position');
+
+                expect('focus').not.toHaveBeenTriggeredOn(videoProgressSlider.handle);
+            });
+
+            it('is called when video plays', function () {
+                videoPlayer.play();
+
+                waitsFor(function () {
+                    return videoPlayer.duration() > 0;
+                }, 'duration is set', 5000);
+
+                runs(function () {
+                    expect(videoProgressSlider.notifyThroughHandleEnd)
+                        .toHaveBeenCalledWith({end: false});
+                });
+            });
+        });
     });
 
 }).call(this);
